@@ -1,7 +1,7 @@
 fs.delete("bin")
 fs.makeDir("bin")
 
-FILELIST = [
+FILELIST = {
     "area-dig.lua",
     "dig.lua",
     "digf-l3.lua",
@@ -11,10 +11,11 @@ FILELIST = [
     "item.lua",
     "opendoor.lua",
     "total-dig.lua",
-]
+}
 
-for file in FILELIST do
-    local url = "https://raw.githubusercontent.com/yuniruyuni/yunirucraft/main/" .. file
+for idx = 1, #FILELIST do
+    local file = FILELIST[idx]
+    local url = "https://raw.githubusercontent.com/yuniruyuni/yunicraft/main/" .. file
     local req = http.get(url)
     local downloaded = req.readAll()
     local f = fs.open("bin/" .. file, "w")
@@ -22,4 +23,3 @@ for file in FILELIST do
     f.close()
     req.close()
 end
-
