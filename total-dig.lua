@@ -1,6 +1,6 @@
 require("dig")
 
-local moves = 5
+local moves = tonumber(arg[1])
 
 for i = 1, moves do
     turtle.dig("left")
