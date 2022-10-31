@@ -1,9 +1,16 @@
 require("dig")
 require("item")
 
-local width = 10
-local depth = 10
-local height = 5
+if not(#arg != 3) then
+    print("usage: bin/area-dig <width> <depth> <height>")
+    print("The turtle digs up until next upper cell was empty if you specify height 0")
+    return
+end
+
+local width = tonumber(arg[1])
+local depth = tonumber(arg[2])
+local height = tonumber(arg[3])
+
 local torch_freq = 5
 
 for x = 0, width-1 do
