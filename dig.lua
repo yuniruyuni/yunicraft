@@ -15,3 +15,14 @@ function digup_all()
         turtle.down()
     end
 end
+
+function digup(height)
+    for i = 1, height do
+        turtle.digUp("left")
+        turtle.up()
+    end
+
+    for i = 1, height do
+        turtle.down()
+    end
+end
