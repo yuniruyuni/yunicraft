@@ -7,8 +7,8 @@ local height = 5
 local torch_freq = 5
 
 for x = 0, width-1 do
-    local torch_x = (x % torch_freq) == 0
-    for z = 1, depth do
+    local torch_x = ((x % torch_freq) == 0)
+    for z = 0, depth-1 do
         turtle.dig("left")
         turtle.forward()
         digup(height)
@@ -16,8 +16,8 @@ for x = 0, width-1 do
 
     for z = 0, depth-1 do
         turtle.back()
-        local torch_z = (z % torch_freq) == 0
-        if tourch_x and tourch_z then
+        local torch_z = ((z % torch_freq) == 0)
+        if torch_x and torch_z then
             place_item(TORCH)
         end
     end
