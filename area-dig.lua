@@ -6,7 +6,7 @@ local depth = 10
 local height = 5
 local torch_freq = 5
 
-for x = 1, width do
+for x = 0, width-1 do
     local torch_x = (x % torch_freq) == 0
     for z = 1, depth do
         turtle.dig("left")
@@ -14,7 +14,7 @@ for x = 1, width do
         digup(height)
     end
 
-    for z = 1, depth do
+    for z = 0, depth-1 do
         turtle.back()
         local torch_z = (z % torch_freq) == 0
         if tourch_x and tourch_z then
@@ -23,6 +23,7 @@ for x = 1, width do
     end
 
     turtle.turnRight()
+    turtle.dig("left")
     turtle.forward()
     turtle.turnLeft()
 end
