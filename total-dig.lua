@@ -1,8 +1,8 @@
-requie("dig")
+require("dig")
 
 local moves = 5
 
-for i = 0, moves do
+for i = 1, moves do
     turtle.dig("left")
     turtle.forward()
     digup_all()
@@ -20,6 +20,6 @@ for i = 0, moves do
     turtle.turnLeft()
 end
 
-for i = 0, moves do
+for i = 1, moves do
     turtle.back()
 end
