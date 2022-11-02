@@ -1,3 +1,13 @@
+if not(#arg == 1) then
+    print("usage: update <tag>")
+    return
+end
+
+tag = arg[1]
+if not tag then
+    tag = "main"
+end
+
 fs.delete("bin")
 fs.makeDir("bin")
 
@@ -16,7 +26,7 @@ FILELIST = {
 
 for idx = 1, #FILELIST do
     local file = FILELIST[idx]
-    local url = "https://raw.githubusercontent.com/yuniruyuni/yunicraft/main/" .. file
+    local url = "https://raw.githubusercontent.com/yuniruyuni/yunicraft/" .. tag .. "/" .. file
     local req = http.get(url)
     local downloaded = req.readAll()
     local f = fs.open("bin/" .. file, "w")
