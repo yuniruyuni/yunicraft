@@ -1,6 +1,6 @@
 local moves = 5
 for i = 0, moves do
-    turtle.dig("left")
+    turtle.dig()
     turtle.forward()
 end
 

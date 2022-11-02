@@ -1,4 +1,5 @@
 local dig = require("lib/dig")
+local move = require("lib/move")
 local item = require("lib/item")
 
 if not(#arg == 3) then
@@ -16,13 +17,16 @@ local torch_freq = 5
 for x = 0, width-1 do
     local torch_x = ((x % torch_freq) == 0)
     for z = 0, depth-1 do
-        turtle.dig("left")
-        turtle.forward()
-        dig.up(height)
+        move.ensureForward()
+        if height == 0 then
+            move.down(dig.upAll())
+        else
+            move.down(dig.up(height))
+        end
     end
 
     for z = 0, depth-1 do
-        turtle.back()
+        move.ensureBack()
         local torch_z = ((z % torch_freq) == 0)
         if torch_x and torch_z then
             item.place(item.TORCH)
@@ -30,7 +34,6 @@ for x = 0, width-1 do
     end
 
     turtle.turnRight()
-    turtle.dig("left")
-    turtle.forward()
+    move.ensureForward()
     turtle.turnLeft()
 end

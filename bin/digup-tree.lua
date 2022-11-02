@@ -1,4 +1,4 @@
-turtle.dig("left")
+turtle.dig()
 turtle.forward()
 
 local moved = 0
@@ -9,7 +9,7 @@ while true do
     end
 
     moved = moved + 1
-    turtle.digUp("left")
+    turtle.digUp()
     turtle.up()
 end
 
