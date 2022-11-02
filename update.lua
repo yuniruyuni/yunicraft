@@ -25,4 +25,5 @@ for idx = 1, #FILELIST do
     req.close()
 end
 
+fs.delete("update.lua")
 fs.move("bin/update.lua", "update.lua")
