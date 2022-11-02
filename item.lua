@@ -18,6 +18,7 @@ local function place(name)
 end
 
 return {
+  TORCE = TORCE,
   find = find,
   place = place
 }

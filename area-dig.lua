@@ -25,7 +25,7 @@ for x = 0, width-1 do
         turtle.back()
         local torch_z = ((z % torch_freq) == 0)
         if torch_x and torch_z then
-            item.place(TORCH)
+            item.place(item.TORCH)
         end
     end
 
