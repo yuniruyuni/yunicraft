@@ -1,4 +1,4 @@
-require("dig")
+local dig = require("dig")
 require("item")
 
 if not(#arg != 3) then
@@ -18,7 +18,7 @@ for x = 0, width-1 do
     for z = 0, depth-1 do
         turtle.dig("left")
         turtle.forward()
-        digup(height)
+        dig.up(height)
     end
 
     for z = 0, depth-1 do

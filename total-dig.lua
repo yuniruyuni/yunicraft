@@ -1,21 +1,21 @@
-require("dig")
+local dig = require("dig")
 
 local moves = tonumber(arg[1])
 
 for i = 1, moves do
     turtle.dig("left")
     turtle.forward()
-    digup_all()
+    dig.up_all()
     turtle.turnLeft()
     turtle.dig("left")
     turtle.forward()
-    digup_all()
+    dig.up_all()
     turtle.turnRight()
     turtle.turnRight()
     turtle.forward()
     turtle.dig("left")
     turtle.forward()
-    digup_all()
+    dig.up_all()
     turtle.back()
     turtle.turnLeft()
 end

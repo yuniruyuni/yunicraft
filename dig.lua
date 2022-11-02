@@ -1,4 +1,4 @@
-function digup_all()
+local function up_all()
     local moved = 0
     while true do
         local found, _ = turtle.inspectUp()
@@ -16,7 +16,7 @@ function digup_all()
     end
 end
 
-function digup(height)
+local function up(height)
     for i = 1, height do
         turtle.digUp("left")
         turtle.up()
@@ -26,3 +26,8 @@ function digup(height)
         turtle.down()
     end
 end
+
+return {
+    up_all = up_all,
+    up = up,
+}
