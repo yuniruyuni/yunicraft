@@ -11,6 +11,7 @@ FILELIST = {
     "item.lua",
     "opendoor.lua",
     "total-dig.lua",
+    "update.lua",
 }
 
 for idx = 1, #FILELIST do
@@ -23,3 +24,5 @@ for idx = 1, #FILELIST do
     f.close()
     req.close()
 end
+
+fs.move("bin/update.lua", "update.lua")
