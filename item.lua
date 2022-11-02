@@ -1,18 +1,23 @@
-TORCH = "minecraft:torch"
+local TORCH = "minecraft:torch"
 
--- find_slot finds an item slot that has a specified item.
-function find_slot(name)
+-- find finds an item slot that has a specified item.
+local function find(name)
   for i = 1,16 do
     local item = turtle.getItemDetail(i)
-    if item and item.name == "minecraft:torch" then
+    if item and item.name == name then
         return i
     end
   end
   return -1
 end
 
--- place_item finds specified name item and place the item from inventry to front.
-function place_item(name)
-    turtle.select(find_slot(name))
+-- place finds specified name item and place the item from inventry to front.
+local function place(name)
+    turtle.select(find(name))
     turtle.place()
 end
+
+return {
+  find = find,
+  place = place
+}

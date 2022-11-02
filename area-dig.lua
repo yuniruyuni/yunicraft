@@ -1,5 +1,5 @@
 local dig = require("dig")
-require("item")
+local item = require("item")
 
 if not(#arg != 3) then
     print("usage: bin/area-dig <width> <depth> <height>")
@@ -25,7 +25,7 @@ for x = 0, width-1 do
         turtle.back()
         local torch_z = ((z % torch_freq) == 0)
         if torch_x and torch_z then
-            place_item(TORCH)
+            item.place(TORCH)
         end
     end
 
