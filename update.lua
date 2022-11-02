@@ -1,8 +1,3 @@
-if not(#arg == 1) then
-    print("usage: update <tag>")
-    return
-end
-
 tag = arg[1]
 if not tag then
     tag = "main"
