@@ -180,9 +180,13 @@ function run_mode7()
     turtle.suck()
     local slot = item.find("minecraft:dried_kelp_block")
     if not(slot == -1) then
+        local KONBU_FUEL = 200
+        local diff = turtle.getFuelLimit() - turtle.getFuelLevel()
+        local amount = diff / KONBU_FUEL
+
         turtle.select(slot)
         -- 燃料補給
-        turtle.refuel()
+        turtle.refuel(amount)
     end
 
     -- あまりは戻す
