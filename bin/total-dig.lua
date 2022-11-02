@@ -1,4 +1,4 @@
-local dig = require("dig")
+local dig = require("lib/dig")
 
 local moves = tonumber(arg[1])
 

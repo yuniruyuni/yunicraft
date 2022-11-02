@@ -7,6 +7,8 @@ do
     FULLPATH="${CC_COMPUTER_PATH}\\${FILE}"
     if [ -d $FULLPATH ]; then
         echo "copying git content into ${FULLPATH}"
+        rm -rf "${FULLPATH}"
+        mkdir -p "${FULLPATH}"
         cp -r ./* "${FULLPATH}"
     fi
 done

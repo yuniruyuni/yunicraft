@@ -1,5 +1,5 @@
-local dig = require("dig")
-local item = require("item")
+local dig = require("lib/dig")
+local item = require("lib/item")
 
 if not(#arg == 3) then
     print("usage: bin/area-dig <width> <depth> <height>")
