@@ -12,8 +12,14 @@ local function find(name)
 end
 
 -- place finds specified name item and place the item from inventry to front.
+-- if no specified item, it just skip item placing.
 local function place(name)
-    turtle.select(find(name))
+    local found = find(name)
+    if found == -1 then
+      return
+    end
+
+    turtle.select(found)
     turtle.place()
 end
 
