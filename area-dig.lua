@@ -1,7 +1,7 @@
 local dig = require("dig")
 local item = require("item")
 
-if not(#arg != 3) then
+if not(#arg == 3) then
     print("usage: bin/area-dig <width> <depth> <height>")
     print("The turtle digs up until next upper cell was empty if you specify height 0")
     return
