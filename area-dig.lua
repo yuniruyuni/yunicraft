@@ -1,7 +1,3 @@
--- TODO-0: 松明もっていなかったら置かないでスキップ
--- TODO-1: areaを掘るとき、一旦、高いところに登って、「降りながら掘る」ようにする
--- TODO-2: total-digとマージする
-
 local dig = require("dig")
 local item = require("item")
 
