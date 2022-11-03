@@ -1,1 +1,0 @@
-rs.setOutput("front", true)
