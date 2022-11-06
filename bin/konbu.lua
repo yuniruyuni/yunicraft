@@ -16,18 +16,26 @@ function run_mode1()
             move.ensureForward()
         end
 
-        for z = 1, depth do
-            move.ensureBack()
-        end
-
         if not(x == width) then
-            turtle.turnRight()
-            move.ensureForward()
-            turtle.turnLeft()
+            if (x % 2) == 1 then
+                turtle.turnRight()
+                move.ensureForward()
+                turtle.turnRight()
+            else
+                turtle.turnLeft()
+                move.ensureForward()
+                turtle.turnLeft()
+            end
         end
     end
 
     move.up(height)
+
+    -- 奇数回の横移動なら、最終的な位置が奥なので
+    -- 縦方向にも戻る必要がある
+    if (width % 2) == 1 then
+        move.back(depth)
+    end
 
     turtle.turnLeft()
     move.forward(width)
@@ -42,15 +50,23 @@ function run_mode2()
             move.ensureForward()
         end
 
-        for z = 1, depth do
-            move.ensureBack()
-        end
-
         if not(x == width) then
-            turtle.turnRight()
-            move.ensureForward()
-            turtle.turnLeft()
+            if (x % 2) == 1 then
+                turtle.turnRight()
+                move.ensureForward()
+                turtle.turnRight()
+            else
+                turtle.turnLeft()
+                move.ensureForward()
+                turtle.turnLeft()
+            end
         end
+    end
+
+    -- 奇数回の横移動なら、最終的な位置が奥なので
+    -- 縦方向にも戻る必要がある
+    if (width % 2) == 1 then
+        move.back(depth)
     end
 
     turtle.turnLeft()
@@ -182,7 +198,7 @@ function run_mode7()
     if not(slot == -1) then
         local KONBU_FUEL = 200
         local diff = turtle.getFuelLimit() - turtle.getFuelLevel()
-        local amount = diff / KONBU_FUEL
+        local amount = diff // KONBU_FUEL
 
         turtle.select(slot)
         -- 燃料補給
