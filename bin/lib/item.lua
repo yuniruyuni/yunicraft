@@ -1,4 +1,5 @@
 local TORCH = "minecraft:torch"
+local BEDROCK = "minecraft:bedrock"
 
 -- find finds an item slot that has a specified item.
 local function find(name)
@@ -25,6 +26,7 @@ end
 
 return {
   TORCH = TORCH,
+  BEDROCK = BEDROCK,
   find = find,
   place = place
 }

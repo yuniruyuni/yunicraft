@@ -16,7 +16,7 @@ function run_mode1()
             move.ensureForward()
         end
 
-        if not(x == width) then
+        if x ~= width then
             if (x % 2) == 1 then
                 turtle.turnRight()
                 move.ensureForward()
@@ -50,7 +50,7 @@ function run_mode2()
             move.ensureForward()
         end
 
-        if not(x == width) then
+        if x ~= width then
             if (x % 2) == 1 then
                 turtle.turnRight()
                 move.ensureForward()
@@ -110,7 +110,7 @@ function run_mode4()
     turtle.turnLeft()
 
     local slot = item.find("minecraft:dried_kelp_block")
-    if not(slot == -1) then
+    if slot ~= -1 then
         turtle.select(slot)
         turtle.drop()
     end
@@ -195,7 +195,7 @@ function run_mode7()
     -- 燃料を取り出す
     turtle.suck()
     local slot = item.find("minecraft:dried_kelp_block")
-    if not(slot == -1) then
+    if slot ~= -1 then
         local KONBU_FUEL = 200
         local diff = turtle.getFuelLimit() - turtle.getFuelLevel()
         local amount = diff // KONBU_FUEL
