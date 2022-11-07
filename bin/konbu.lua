@@ -198,7 +198,7 @@ function run_mode7()
     if slot ~= -1 then
         local KONBU_FUEL = 200
         local diff = turtle.getFuelLimit() - turtle.getFuelLevel()
-        local amount = diff // KONBU_FUEL
+        local amount = diff / KONBU_FUEL
 
         turtle.select(slot)
         -- 燃料補給
