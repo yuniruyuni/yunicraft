@@ -1,4 +1,6 @@
--- up_all() digs blocks until turtle meets empty cell
+local item = require("lib/item")
+
+-- upAll() digs blocks until turtle meets empty cell
 -- and return turtle moved count.
 local function upAll()
     local moved = 0
@@ -11,6 +13,24 @@ local function upAll()
         moved = moved + 1
         turtle.digUp()
         turtle.up()
+    end
+
+    return moved
+end
+
+-- downAll() digs blocks until turtle meets bedrock cell
+-- and return turtle moved count.
+local function downAll()
+    local moved = 0
+    while true do
+        local found, detail = turtle.inspectDown()
+        if found and detail and detail.name == item.BEDROCK then
+            break
+        end
+
+        moved = moved + 1
+        turtle.digDown()
+        turtle.down()
     end
 
     return moved
@@ -34,6 +54,7 @@ end
 
 return {
     upAll = upAll,
+    downAll = downAll,
     up = up,
     down = down,
 }

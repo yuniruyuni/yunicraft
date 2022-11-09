@@ -3,9 +3,8 @@ local move = require("lib/move")
 local item = require("lib/item")
 
 if not(#arg == 3) then
-    print("usage: bin/dig <width> <depth> <height>")
+    print("usage: bin/dig-up <width> <depth> <height>")
     print("The turtle digs up until next upper cell was empty if you specify height 0")
-    print("The turtle digs down when you specify height < 0")
     return
 end
 
@@ -21,8 +20,6 @@ for x = 1, width do
         move.ensureForward()
         if height == 0 then
             move.down(dig.upAll())
-        elseif height < -1 then
-            move.up(dig.down(-height))
         else
             move.down(dig.up(height))
         end

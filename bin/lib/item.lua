@@ -24,9 +24,22 @@ local function place(name)
     turtle.place()
 end
 
+-- placeDown finds specified name item and placeDown the item from inventry to front.
+-- if no specified item, it just skip item placing.
+local function placeDown(name)
+    local found = find(name)
+    if found == -1 then
+      return
+    end
+
+    turtle.select(found)
+    turtle.placeDown()
+end
+
 return {
   TORCH = TORCH,
   BEDROCK = BEDROCK,
   find = find,
-  place = place
+  place = place,
+  placeDown = placeDown,
 }
