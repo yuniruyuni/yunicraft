@@ -21,9 +21,9 @@ local tests = concat(
 for i, f in ipairs(tests) do
     for mod in string.gmatch(f, "(bin/.+_test).lua") do
         local result = require(mod)
-        result:showResult()
+        print(result:resultText())
         print("-------")
-        result:showFailures()
+        print(result:failuresText())
         print(result:succeededCount() .. " / " .. result:caseCount())
     end
 end

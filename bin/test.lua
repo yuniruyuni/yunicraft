@@ -2,7 +2,7 @@
 
 local Case = {}
 
-function Case:toString()
+function Case:statusText()
     if self.succeeded then
         return "[SUCCESS] " .. self.name
     else
@@ -19,7 +19,7 @@ end
 function Case.new(name)
     local obj = {
         name = name,
-        succeeded = true,
+        succeeded = true
     }
     return setmetatable(obj, { __index = Case })
 end
@@ -32,18 +32,22 @@ function Test:case(name, f)
     f(t)
 end
 
-function Test:showResult()
+function Test:resultText()
+    local res = {}
     for i, c in ipairs(self.cases) do
-        print(c:toString())
+        table.insert(res, c:statusText())
     end
+    return table.concat(res, "\n")
 end
 
-function Test:showFailures()
+function Test:failuresText()
+    local res = {}
     for i, c in ipairs(self.cases) do
         if not c.succeeded then
-            print(c:toString())
+            table.insert(res, c:statusText())
         end
     end
+    return table.concat(res, "\n")
 end
 
 function Test:succeededCount()
