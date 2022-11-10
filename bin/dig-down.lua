@@ -4,7 +4,7 @@ local item = require("lib/item")
 
 if not(#arg == 3) then
     print("usage: bin/dig-down <width> <depth> <height>")
-    print("The turtle digs down until next lower cell was empty if you specify height 0")
+    print("The turtle digs down until next lower cell was bedrock if you specify height 0")
     return
 end
 
