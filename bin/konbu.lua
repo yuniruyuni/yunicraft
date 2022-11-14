@@ -3,18 +3,16 @@ local move = require("lib/move")
 local item = require("lib/item")
 
 -- 水槽のサイズ
-local width = 5
-local depth = 5
-local height = 5
+local width = 20
+local depth = 19
+local height = 6
 
 -- mode-1. 昆布を壊す
 function run_mode1()
     dig.down(height)
 
     for x = 1, width do
-        for z = 1, depth do
-            move.ensureForward()
-        end
+        move.ensureForward(depth)
 
         if x ~= width then
             if (x % 2) == 1 then
@@ -31,10 +29,15 @@ function run_mode1()
 
     move.up(height)
 
-    -- 奇数回の横移動なら、最終的な位置が奥なので
-    -- 縦方向にも戻る必要がある
-    if (width % 2) == 1 then
+    if (width % 2) == 0 then
+        -- 奇数回の横移動なら、最終的な位置が奥なので
+        -- 縦方向にも戻る必要がある。方向は正しいので気にしなくて良い
         move.back(depth)
+    else
+        -- 奇数回の横移動なら、最終的な位置は手前なので位置は気にしなくて良い。
+        -- ところが方向は反転しているため一旦正面を向ける。
+        move.turnLeft()
+        move.turnLeft()
     end
 
     turtle.turnLeft()
@@ -63,10 +66,15 @@ function run_mode2()
         end
     end
 
-    -- 奇数回の横移動なら、最終的な位置が奥なので
-    -- 縦方向にも戻る必要がある
-    if (width % 2) == 1 then
+    if (width % 2) == 0 then
+        -- 奇数回の横移動なら、最終的な位置が奥なので
+        -- 縦方向にも戻る必要がある。方向は正しいので気にしなくて良い
         move.back(depth)
+    else
+        -- 奇数回の横移動なら、最終的な位置は手前なので位置は気にしなくて良い。
+        -- ところが方向は反転しているため一旦正面を向ける。
+        move.turnLeft()
+        move.turnLeft()
     end
 
     turtle.turnLeft()
@@ -74,11 +82,12 @@ function run_mode2()
     turtle.turnRight()
 end
 
--- mode-3. 昆布をホッパーに投入する(初期位置から2マス上/後)
+-- mode-3. 昆布をかまど搬入用チェストに投入する(初期位置から3マス上/後)
 function run_mode3()
     turtle.turnLeft()
     turtle.turnLeft()
 
+    turtle.up()
     turtle.up()
     turtle.up()
 
@@ -90,6 +99,7 @@ function run_mode3()
 
     turtle.down()
     turtle.down()
+    turtle.down()
 
     turtle.turnRight()
     turtle.turnRight()
@@ -99,35 +109,36 @@ end
 function run_mode4()
     -- 昆布ブロックをチェストから回収
     -- (初期位置から1マス上/左)
-    turtle.turnLeft()
-
     turtle.up()
 
-    turtle.select(1)
-    turtle.suck()
-
-    -- カマドに向く
+    -- チェストを向いている状態になる
     turtle.turnLeft()
 
-    local slot = item.find("minecraft:dried_kelp_block")
-    if slot ~= -1 then
-        turtle.select(slot)
-        turtle.drop()
-    end
+    -- かまどの数
+    local FURNANCE_COUNT = 3
+    -- loop invariant: "タートルは昆布ブロック用チェストを向いている" (TODO: なにか表明する手段が欲しい)
+    for i = 1, FURNANCE_COUNT do
+        -- 1スタック分(=カマドに入る分)取得
+        turtle.select(i)
+        turtle.suck()
 
-    -- チェストにあまりを戻す
-    turtle.turnRight()
-    while true do
-        local slot = item.find("minecraft:dried_kelp_block")
-        if slot == -1 then
-            break
-        end
-        turtle.select(slot)
-        turtle.drop()
+        -- カマドの位置まで動く
+        turtle.turnLeft()
+        turtle.turnLeft()
+        move.forward(i-1)
+
+        -- カマドに向く
+        turtle.turnRight()
+        item.drop(item.DRIED_KELP_BLOCK)
+
+        -- チェストにあまりを戻す
+        turtle.turnRight()
+        move.forward(i-1)
+
+        while item.drop(item.DRIED_KELP_BLOCK) ~= -1 do end
     end
 
     turtle.down()
-
     turtle.turnRight()
 end
 
@@ -176,7 +187,7 @@ function run_mode6()
 
     -- あまりは戻す
     while true do
-        local slot = item.find("minecraft:dried_kelp")
+        local slot = item.find(item.DRIED_KELP)
         if slot == -1 then
             break
         end
@@ -192,22 +203,13 @@ function run_mode7()
     turtle.turnLeft()
     turtle.up()
 
-    -- 燃料を取り出す
+    -- 補給
     turtle.suck()
-    local slot = item.find("minecraft:dried_kelp_block")
-    if slot ~= -1 then
-        local KONBU_FUEL = 200
-        local diff = turtle.getFuelLimit() - turtle.getFuelLevel()
-        local amount = diff / KONBU_FUEL
-
-        turtle.select(slot)
-        -- 燃料補給
-        turtle.refuel(amount)
-    end
+    item.refuel(item.DRIED_KELP_BLOCK)
 
     -- あまりは戻す
     while true do
-        local slot = item.find("minecraft:dried_kelp_block")
+        local slot = item.find(item.DRIED_KELP_BLOCK)
         if slot == -1 then
             break
         end
