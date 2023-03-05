@@ -29,8 +29,9 @@ local function place(name)
     end
 end
 
--- placeDown finds specified name item and placeDown the item from inventry to front.
+-- placeDown finds specified name item and placeDown the item from inventry to bottom.
 -- if no specified item, it just skip item placing.
+-- if bottom field cell is filled, it will retry.
 local function placeDown(name)
     local found = find(name)
     if found == -1 then
