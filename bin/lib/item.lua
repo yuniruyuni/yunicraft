@@ -2,6 +2,7 @@ local TORCH = "minecraft:torch"
 local BEDROCK = "minecraft:bedrock"
 local DRIED_KELP = "minecraft:dried_kelp"
 local DRIED_KELP_BLOCK = "minecraft:dried_kelp_block"
+local DIRT = "minecraft:dirt"
 
 -- find finds an item slot that has a specified item.
 local function find(name)
@@ -82,6 +83,7 @@ return {
   BEDROCK = BEDROCK,
   DRIED_KELP = DRIED_KELP,
   DRIED_KELP_BLOCK = DRIED_KELP_BLOCK,
+  DIRT = DIRT,
   find = find,
   place = place,
   placeDown = placeDown,
