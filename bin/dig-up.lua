@@ -26,7 +26,16 @@ for x = 1, width do
     end
 
     for z = 1, depth do
+        -- もし空中に浮いているなら直下にDIRTを置こうとする
+        local found, _ = turtle.inspectDown()
+        if not found then
+            item.placeDown(item.DIRT)
+        end
+
+        -- １歩戻って
         move.ensureBack()
+
+        -- トーチを置くべき周期に来ているならトーチを置く
         local torch_z = ((z % torch_freq) == 1)
         if torch_x and torch_z then
             item.place(item.TORCH)
