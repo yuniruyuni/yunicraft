@@ -1,6 +1,21 @@
 local modem = peripheral.find("modem")
 
-local srcName = "minecraft:chest_18"
+function findSrcBarrel()
+    local srcPrefixPattern= "minecraft:barrel_"
+    for _, val in pairs(peripheral.getNames()) do
+        if string.match(val, srcPrefixPattern) then
+            return val
+        end
+    end
+    return ""
+end
+
+local srcName = findSrcBarrel()
+if src == "" then
+    print("There are no barrel. This program needs a barrel.")
+    return 1
+end
+
 local src = peripheral.wrap(srcName)
 
 local CHEST_MAX_ITEM_COUNT = 54
