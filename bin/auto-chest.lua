@@ -12,7 +12,7 @@ end
 
 local srcName = findSrcBarrel()
 if src == "" then
-    print("There are no barrel. This program needs a barrel.")
+    print("There are no barrel. This program needs a barrel for item inbox.")
     return 1
 end
 
