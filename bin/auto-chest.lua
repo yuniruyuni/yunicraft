@@ -3,12 +3,14 @@ local modem = peripheral.find("modem")
 local srcName = "minecraft:chest_18"
 local src = peripheral.wrap(srcName)
 
+local CHEST_MAX_ITEM_COUNT = 54
+
 function isFullItem(chest)
     local items = chest.list()
-    if #items ~= 54 then
+    if #items ~= CHEST_MAX_ITEM_COUNT then
         return false
     end
-    local lastItem = chest.getItemDetail(54)
+    local lastItem = chest.getItemDetail(CHEST_MAX_ITEM_COUNT)
     return lastItem and (lastItem.maxCount <= lastItem.count)
 end
 
