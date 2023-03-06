@@ -8,6 +8,9 @@ function debug(val)
     print(val)
 end
 
+-- findSrcBarrel finds a barrel in connected computer network.
+-- This function will return a barrel's network name.
+-- If there are no barrel in connected network, it will return empty string.
 function findSrcBarrel()
     local srcPrefixPattern= "minecraft:barrel_"
     for _, val in pairs(peripheral.getNames()) do
@@ -59,7 +62,6 @@ end
 
 local emptyChests = { }
 local item2Chests = { }
--- local fullChests = { }
 
 for _, dstName in ipairs(chests) do
     local dst = peripheral.wrap(dstName)
