@@ -10,7 +10,13 @@ function Case:statusText()
     end
 end
 
-function Case:assert(want, got)
+function Case:assert(want)
+    if want then
+        self.succeeded = false
+    end
+end
+
+function Case:equals(want, got)
     if want ~= got then
         self.succeeded = false
     end
