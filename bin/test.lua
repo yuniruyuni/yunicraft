@@ -22,6 +22,20 @@ function Case:equals(want, got)
     end
 end
 
+function Case:noerror(f, ...)
+    local ok, _ = pcall(f, ...)
+    if not ok then
+        self.succeeded = false
+    end
+end
+
+function Case:error(f, ...)
+    local ok , _ = pcall(f, ...)
+    if ok then
+        self.succeeded = false
+    end
+end
+
 function Case.new(name)
     local obj = {
         name = name,
