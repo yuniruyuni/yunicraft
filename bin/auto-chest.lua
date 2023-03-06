@@ -32,7 +32,8 @@ end
 local CHEST_MAX_ITEM_COUNT = 54
 
 -- isFullItem checks target chest's item full or it has empty cell for such item.
--- For example. Assume special chest that can only 3 items, 3amount hold, [3, 3, 3],
+-- For example. Assume special chest that can only 3 items, 3 amount hold, [3, 3, 3],
+-- and also asume a, b and c are different items.
 --   isFullItem([1a, 3b, 0], a) == true
 --   isFullItem([1a, 3b, 0], b) == true
 --   isFullItem([1a, 3b, 1c], b) == false
