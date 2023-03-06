@@ -47,6 +47,8 @@ function isFullItem(chest, name)
     return lastItem and lastItem == name and (lastItem.maxCount <= lastItem.count)
 end
 
+-- findChest will return an inventory's available cell for item.
+-- TODO: this function name should be changed... findAvailableCell??
 function findChest(chest, itemName)
     if isFullItem(chest, itemName) then
         return nil
