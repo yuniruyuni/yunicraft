@@ -31,6 +31,12 @@ end
 -- double chest's max inventory item count.
 local CHEST_MAX_ITEM_COUNT = 54
 
+-- isFullItem checks target chest's item full or it has empty cell for such item.
+-- For example. Assume special chest that can only 3 items, 3amount hold, [3, 3, 3],
+--   isFullItem([1a, 3b, 0], a) == true
+--   isFullItem([1a, 3b, 0], b) == true
+--   isFullItem([1a, 3b, 1c], b) == false
+--   isFullItem([1a, 2b, 1c], b) == true
 function isFullItem(chest, name)
     local items = chest.list()
     if #items ~= CHEST_MAX_ITEM_COUNT then
