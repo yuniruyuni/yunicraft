@@ -28,6 +28,7 @@ if src == "" then
     return 1
 end
 
+-- double chest's max inventory item count.
 local CHEST_MAX_ITEM_COUNT = 54
 
 function isFullItem(chest, name)
