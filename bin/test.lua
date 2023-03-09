@@ -1,5 +1,7 @@
 -- test framework
 
+require("bin/lib/util")
+
 local Case = {}
 
 function Case:statusText()
@@ -18,6 +20,12 @@ end
 
 function Case:equals(want, got)
     if want ~= got then
+        self.succeeded = false
+    end
+end
+
+function Case:deepEquals(want, got)
+    if not deepEquals(want, got) then
         self.succeeded = false
     end
 end
