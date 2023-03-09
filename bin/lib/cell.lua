@@ -18,8 +18,12 @@ function Cell:capacity()
     return self.maxCount - self.count
 end
 
-function Cell:available()
+function Cell:occupied()
     return self:capacity() <= 0
+end
+
+function Cell:unoccupied()
+    return not self:occupied()
 end
 
 return Cell

@@ -11,7 +11,7 @@ function Case:statusText()
 end
 
 function Case:assert(want)
-    if want then
+    if not want then
         self.succeeded = false
     end
 end

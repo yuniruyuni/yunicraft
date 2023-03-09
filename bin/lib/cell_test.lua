@@ -34,7 +34,7 @@ test:case("calc correct capacity", function (t)
     t:equals(target:capacity(), 34)
 end)
 
-test:case("available if count < maxCount", function (t)
+test:case("unoccupied if count < maxCount", function (t)
     local target = Cell.new{
         count = 30,
         maxCount = 64,
@@ -45,10 +45,10 @@ test:case("available if count < maxCount", function (t)
             ["minecraft:stone_tool_materials"] = true,
         },
     }
-    t:assert(target:available())
+    t:assert(target:unoccupied())
 end)
 
-test:case("unavailable if count >= maxCount", function (t)
+test:case("occupied if count >= maxCount", function (t)
     local target = Cell.new{
         count = 64,
         maxCount = 64,
@@ -59,7 +59,7 @@ test:case("unavailable if count >= maxCount", function (t)
             ["minecraft:stone_tool_materials"] = true,
         },
     }
-    t:assert(not target:available())
+    t:assert(target:occupied())
 end)
 
 
