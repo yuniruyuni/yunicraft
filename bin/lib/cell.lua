@@ -26,4 +26,8 @@ function Cell:unoccupied()
     return not self:occupied()
 end
 
+function Cell:empty()
+    return self.count == 0
+end
+
 return Cell

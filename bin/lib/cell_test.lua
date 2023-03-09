@@ -53,5 +53,26 @@ test:case("occupied if count >= maxCount", function (t)
     t:assert(target:occupied())
 end)
 
+test:case("empty if count == 0", function (t)
+    local target = Cell.new{
+        count = 0,
+        maxCount = 64,
+        name = "minecraft:cobblestone",
+        displayName = "Cobblestone",
+        tags = { },
+    }
+    t:assert(target:empty())
+end)
+
+test:case("not empty if count != 0", function (t)
+    local target = Cell.new{
+        count = 32,
+        maxCount = 64,
+        name = "minecraft:cobblestone",
+        displayName = "Cobblestone",
+        tags = { },
+    }
+    t:assert(not target:empty())
+end)
 
 return test
