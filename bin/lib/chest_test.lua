@@ -6,15 +6,7 @@ local Cell = require("bin/lib/cell")
 test:case("successful construction", function(t)
     t:noerror(Chest.new, {
         name = "name",
-        cells = {
-            Cell.new{
-                count = 32,
-                maxCount = 64,
-                name = "name",
-                displayName = "displayName",
-                tags = {},
-            }
-        },
+        cells = { Cell.default{} },
     })
 end)
 
@@ -26,27 +18,9 @@ test:case("it hasAvailableCellFor an item if exist unoccupied cell for target it
     local target = Chest.new{
         name = "abc",
         cells = {
-            Cell.new{
-                count = 2,
-                displayName = "...",
-                maxCount = 2,
-                name = "ITEM",
-                tags = {},
-            },
-            Cell.new{
-                count = 1,
-                displayName = "...",
-                maxCount = 2,
-                name = "ITEM",
-                tags = {},
-            },
-            Cell.new{
-                count = 2,
-                displayName = "...",
-                maxCount = 2,
-                name = "ITEM",
-                tags = {},
-            },
+            Cell.default{ name = "ITEM", count = 2, maxCount = 2 },
+            Cell.default{ name = "ITEM", count = 1, maxCount = 2 },
+            Cell.default{ name = "ITEM", count = 2, maxCount = 2 },
         },
     }
 

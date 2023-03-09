@@ -1,17 +1,28 @@
 local expect = require("cc.expect")
+local default = require("bin/lib/default")
 
 -- TODO: rename this object as `Cell` or `InventoryCell`.
 local Cell = {}
 
 function Cell.new(obj)
-    expect.field(obj, "count", "number")
-    expect.field(obj, "displayName", "string")
-    expect.field(obj, "maxCount", "number")
     expect.field(obj, "name", "string")
+    expect.field(obj, "displayName", "string")
+    expect.field(obj, "count", "number")
+    expect.field(obj, "maxCount", "number")
     expect.field(obj, "tags", "table")
 
     setmetatable(obj, {__index = Cell})
     return obj
+end
+
+function Cell.default(obj)
+    return Cell.new(default({
+        name = "",
+        displayName = "",
+        count = 0,
+        maxCount = 0,
+        tags = {},
+    }, obj))
 end
 
 function Cell:has(item)
