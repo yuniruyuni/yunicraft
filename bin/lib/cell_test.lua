@@ -75,4 +75,37 @@ test:case("not empty if count != 0", function (t)
     t:assert(not target:empty())
 end)
 
+test:case("empty cell available for all item", function (t)
+    local target = Cell.new{
+        count = 0,
+        maxCount = 64,
+        name = "ITEM",
+        displayName = "...",
+        tags = { },
+    }
+    t:assert(target:availableFor("OTHER-ITEM"))
+end)
+
+test:case("unoccupied cell available for target item", function (t)
+    local target = Cell.new{
+        count = 32,
+        maxCount = 64,
+        name = "ITEM",
+        displayName = "...",
+        tags = { },
+    }
+    t:assert(target:availableFor("ITEM"))
+end)
+
+test:case("occupied cell unavailable for target item", function (t)
+    local target = Cell.new{
+        count = 64,
+        maxCount = 64,
+        name = "ITEM",
+        displayName = "...",
+        tags = { },
+    }
+    t:assert(not target:availableFor("ITEM"))
+end)
+
 return test

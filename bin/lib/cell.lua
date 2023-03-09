@@ -1,4 +1,4 @@
-local expect = require "cc.expect"
+local expect = require("cc.expect")
 
 -- TODO: rename this object as `Cell` or `InventoryCell`.
 local Cell = {}
@@ -14,6 +14,10 @@ function Cell.new(obj)
     return obj
 end
 
+function Cell:has(item)
+    return self.name == item
+end
+
 function Cell:capacity()
     return self.maxCount - self.count
 end
@@ -24,6 +28,16 @@ end
 
 function Cell:unoccupied()
     return not self:occupied()
+end
+
+function Cell:availableFor(item)
+    return (
+        self:empty() or
+        (
+            self:has(item) and
+            self:unoccupied()
+        )
+    )
 end
 
 function Cell:empty()
