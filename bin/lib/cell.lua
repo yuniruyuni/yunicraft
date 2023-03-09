@@ -1,25 +1,25 @@
 local expect = require "cc.expect"
 
 -- TODO: rename this object as `Cell` or `InventoryCell`.
-local Item = {}
+local Cell = {}
 
-function Item.new(obj)
+function Cell.new(obj)
     expect.field(obj, "count", "number")
     expect.field(obj, "displayName", "string")
     expect.field(obj, "maxCount", "number")
     expect.field(obj, "name", "string")
     expect.field(obj, "tags", "table")
 
-    setmetatable(obj, {__index = Item})
+    setmetatable(obj, {__index = Cell})
     return obj
 end
 
-function Item:capacity()
+function Cell:capacity()
     return self.maxCount - self.count
 end
 
-function Item:available()
+function Cell:available()
     return self:capacity() <= 0
 end
 
-return Item
+return Cell
