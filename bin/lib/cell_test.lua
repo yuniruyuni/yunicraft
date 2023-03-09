@@ -26,10 +26,7 @@ test:case("calc correct capacity", function (t)
         maxCount = 64,
         name = "minecraft:cobblestone",
         displayName = "Cobblestone",
-        tags = {
-            ["minecraft:stone_crafting_materials"] = true,
-            ["minecraft:stone_tool_materials"] = true,
-        },
+        tags = { },
     }
     t:equals(target:capacity(), 34)
 end)
@@ -40,10 +37,7 @@ test:case("unoccupied if count < maxCount", function (t)
         maxCount = 64,
         name = "minecraft:cobblestone",
         displayName = "Cobblestone",
-        tags = {
-            ["minecraft:stone_crafting_materials"] = true,
-            ["minecraft:stone_tool_materials"] = true,
-        },
+        tags = { },
     }
     t:assert(target:unoccupied())
 end)
@@ -54,10 +48,7 @@ test:case("occupied if count >= maxCount", function (t)
         maxCount = 64,
         name = "minecraft:cobblestone",
         displayName = "Cobblestone",
-        tags = {
-            ["minecraft:stone_crafting_materials"] = true,
-            ["minecraft:stone_tool_materials"] = true,
-        },
+        tags = { },
     }
     t:assert(target:occupied())
 end)
