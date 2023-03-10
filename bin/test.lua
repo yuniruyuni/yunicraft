@@ -18,15 +18,24 @@ function Case:assert(want)
     end
 end
 
+local function toString(obj)
+    if obj == nil then return "<nil>" end
+    return textutils.serialiseJSON(obj)
+end
+
 function Case:equals(want, got)
     if want ~= got then
         self.succeeded = false
+        self.diff = self.diff .. "want: " .. toString(want) .. "\n"
+        self.diff = self.diff .. " got: " .. toString(got)  .. "\n"
     end
 end
 
 function Case:deepEquals(want, got)
     if not deepEquals(want, got) then
         self.succeeded = false
+        self.diff = self.diff .. "want: " .. toString(want) .. "\n"
+        self.diff = self.diff .. " got: " .. toString(got)  .. "\n"
     end
 end
 
@@ -47,7 +56,8 @@ end
 function Case.new(name)
     local obj = {
         name = name,
-        succeeded = true
+        succeeded = true,
+        diff = "",
     }
     return setmetatable(obj, { __index = Case })
 end
@@ -73,6 +83,9 @@ function Test:failuresText()
     for i, c in ipairs(self.cases) do
         if not c.succeeded then
             table.insert(res, c:statusText())
+            if c.diff ~= "" then
+                table.insert(res, c.diff)
+            end
         end
     end
     return table.concat(res, "\n")
