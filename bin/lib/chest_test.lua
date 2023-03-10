@@ -1,7 +1,7 @@
-local test = require("bin/test")
+local test = require("test")
 
-local Chest = require("bin/lib/chest")
-local Cell = require("bin/lib/cell")
+local Chest = require("lib/chest")
+local Cell = require("lib/cell")
 
 test:case("successful construction", function(t)
     t:noerror(Chest.new, {
@@ -24,7 +24,7 @@ test:case("it hasAvailableCellFor an item if exist unoccupied cell for target it
         },
     }
 
-    t:assert(target:hasAvailableCellFor("ITEM"))
+    t:assert(target:hasAvailableCellFor({name = "ITEM"}))
 end)
 
 return test

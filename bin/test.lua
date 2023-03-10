@@ -1,6 +1,6 @@
 -- test framework
 
-require("bin/lib/util")
+require("lib/util")
 
 local Case = {}
 

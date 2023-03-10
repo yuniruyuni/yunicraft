@@ -1,5 +1,5 @@
 local expect = require("cc.expect")
-local default = require("bin/lib/default")
+local default = require("lib/default")
 
 -- TODO: rename this object as `Cell` or `InventoryCell`.
 local Cell = {}
@@ -26,7 +26,7 @@ function Cell.default(obj)
 end
 
 function Cell:has(item)
-    return self.name == item
+    return self.name == item.name
 end
 
 function Cell:capacity()
@@ -53,6 +53,23 @@ end
 
 function Cell:empty()
     return self.count == 0
+end
+
+function Cell:pushItem(item)
+    if self:empty() then
+        -- TODO: extract method for overwrite self object.
+        for k, v in pairs(Cell.default(item)) do
+            self[k] = v
+        end
+        local res = {}
+        return Cell.default{}
+    else
+        local moved = math.min(item.count, self:capacity())
+        self.count = self.count + moved
+        local res = Cell.default(item)
+        res.count = res.count - moved
+        return res
+    end
 end
 
 return Cell

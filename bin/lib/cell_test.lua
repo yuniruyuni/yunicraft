@@ -1,6 +1,6 @@
-local test = require("bin/test")
+local test = require("test")
 
-local Cell = require("bin/lib/cell")
+local Cell = require("lib/cell")
 
 test:case("successful construction", function(t)
     t:noerror(Cell.new, {
@@ -66,7 +66,7 @@ test:case("empty cell available for all item", function (t)
         count = 0,
         maxCount = 64,
     }
-    t:assert(target:availableFor("OTHER-ITEM"))
+    t:assert(target:availableFor({name = "OTHER-ITEM"}))
 end)
 
 test:case("unoccupied cell available for target item", function (t)
@@ -75,7 +75,7 @@ test:case("unoccupied cell available for target item", function (t)
         count = 32,
         maxCount = 64,
     }
-    t:assert(target:availableFor("ITEM"))
+    t:assert(target:availableFor({name = "ITEM"}))
 end)
 
 test:case("occupied cell unavailable for target item", function (t)
@@ -84,7 +84,35 @@ test:case("occupied cell unavailable for target item", function (t)
         count = 64,
         maxCount = 64,
     }
-    t:assert(not target:availableFor("ITEM"))
+    t:assert(not target:availableFor({name = "ITEM"}))
+end)
+
+test:case("pushItem for empty cell", function (t)
+    local target = Cell.default{ count = 0, maxCount = 0 }
+    local expected = Cell.default{
+        name = "ITEM",
+        displayName = "DisplayName",
+        count = 32,
+        maxCount = 64,
+        tags = {
+            ["minecraft:stone_crafting_materials"] = true,
+            ["minecraft:stone_tool_materials"] = true,
+        },
+    }
+    local arg = Cell.default{
+        name = "ITEM",
+        displayName = "DisplayName",
+        count = 32,
+        maxCount = 64,
+        tags = {
+            ["minecraft:stone_crafting_materials"] = true,
+            ["minecraft:stone_tool_materials"] = true,
+        },
+    }
+
+    target:pushItem(arg)
+
+    t:deepEquals(expected, target)
 end)
 
 return test

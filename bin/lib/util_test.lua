@@ -1,5 +1,5 @@
-local test = require("bin/test")
-require("bin/lib/util")
+local test = require("test")
+require("lib/util")
 
 test:case("deepEquals", function (t)
     t:assert(deepEquals({}, {}))

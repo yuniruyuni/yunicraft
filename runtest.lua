@@ -1,5 +1,7 @@
 -- test entry point
 
+package.path = package.path .. ";/bin/?.lua"
+
 function concat(...)
     local res = {}
 

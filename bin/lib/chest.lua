@@ -1,5 +1,5 @@
 local expect = require("cc.expect")
-local Cell = require("bin/lib/cell")
+local default = require("lib/default")
 
 local Chest = {}
 
@@ -11,14 +11,31 @@ function Chest.new(obj)
     return obj
 end
 
+function Chest.default(obj)
+    return Chest.new(default({
+        name = "",
+        cells = {},
+    }, obj))
+end
+
 function Chest:hasAvailableCellFor(item)
+    return self:availableCellFor(item) ~= nil
+end
+
+function Chest:availableCellFor(item)
     -- TODO: optimize by using dictionary.
     for _, cell in ipairs(self.cells) do
         if cell:availableFor(item) then
-            return true
+            return cell
         end
     end
-    return false
+    return nil
+end
+
+function Chest:pushItem(item)
+    local cell = self:availableCellFor(item)
+    if cell == nil then return item end
+    return cell:pushItem(item)
 end
 
 -- toString makes a string expresses this chest.
