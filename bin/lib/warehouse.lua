@@ -35,4 +35,15 @@ function Warehouse:pushItem(item)
     return found:pushItem(item)
 end
 
+-- listCells gathers all cells in all chests.
+function Warehouse:listCells()
+    local cells = {}
+    for _, chest in ipairs(self.chests) do
+        for _, cell in ipairs(chest.cells) do
+            table.insert(cells, cell)
+        end
+    end
+    return cells
+end
+
 return Warehouse
