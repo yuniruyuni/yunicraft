@@ -33,5 +33,5 @@ while true do
 
     turtle.back()
 
-    os.sleep(60 * 3)
+    os.sleep(5)
 end
