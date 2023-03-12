@@ -1,2 +1,2 @@
 print("start clock")
-os.run({}, "/bin/clock.lua")
+shell.run("/bin/clock.lua")
