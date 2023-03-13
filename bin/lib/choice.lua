@@ -1,34 +1,35 @@
-local function choice(values)
-    local function input(buffer)
-        local datum = {os.pullEvent()}
-        local event = datum[1]
+local function input(buffer)
+    local datum = {os.pullEvent()}
+    local event = datum[1]
 
-        if event == "key" then
-            local key = datum[2]
-            if keys.up == key then
-                return false, -1, buffer
-            end
-
-            if keys.down == key then
-                return false, 1, buffer
-            end
-
-            if keys.backspace == key then
-                return false, 0, buffer:sub(1, -2)
-            end
-        elseif event == "key_up" then
-            local key = datum[2]
-            if keys.enter == key then
-                return (#buffer ~= 0), 0, buffer
-            end
-        elseif event == "char" then
-            local ch = datum[2]
-            return false, 0, buffer .. ch
+    if event == "key" then
+        local key = datum[2]
+        if keys.up == key then
+            return false, -1, buffer
         end
 
-        return false, 0, buffer
+        if keys.down == key then
+            return false, 1, buffer
+        end
+
+        if keys.backspace == key then
+            return false, 0, buffer:sub(1, -2)
+        end
+    elseif event == "key_up" then
+        local key = datum[2]
+        if keys.enter == key then
+            return (#buffer ~= 0), 0, buffer
+        end
+    elseif event == "char" then
+        local ch = datum[2]
+        return false, 0, buffer .. ch
     end
 
+    return false, 0, buffer
+end
+
+
+local function choice(values)
     local buffer = ""
     local pos = 1
 
