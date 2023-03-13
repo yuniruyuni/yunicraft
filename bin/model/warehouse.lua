@@ -1,6 +1,7 @@
 local expect = require("cc.expect")
 local default = require("lib/default")
 local Chest = require("model/chest")
+local Item = require("model/item")
 
 local Warehouse = {}
 
@@ -44,6 +45,27 @@ function Warehouse:listCells()
         end
     end
     return cells
+end
+
+-- listCells gathers all items in this warehouse.
+-- This enumeration is table from name to item.
+function Warehouse:listItems()
+    local items = {}
+    for _, chest in ipairs(self.chests) do
+        for i, cell in ipairs(chest.cells) do
+            if items[cell.name] == nil then
+                items[cell.name] = Item.new{
+                    name = cell.name,
+                    displayName = cell.displayName,
+                    maxCount = cell.maxCount,
+                    tags = cell.tags,
+                    refs = {},
+                }
+            end
+            items[cell.name]:pushRef(chest.name, i, cell.count)
+        end
+    end
+    return items
 end
 
 return Warehouse
