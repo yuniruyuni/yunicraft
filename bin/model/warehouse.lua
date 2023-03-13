@@ -1,6 +1,6 @@
 local expect = require("cc.expect")
 local default = require("lib/default")
-local Chest = require("lib/chest")
+local Chest = require("model/chest")
 
 local Warehouse = {}
 

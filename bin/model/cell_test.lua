@@ -1,6 +1,6 @@
 local test = require("test")
 
-local Cell = require("lib/cell")
+local Cell = require("model/cell")
 
 test:case("successful construction", function(t)
     t:noerror(Cell.new, {

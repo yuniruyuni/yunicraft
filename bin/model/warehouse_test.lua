@@ -1,8 +1,8 @@
 local test = require("test")
 
-local Warehouse = require("lib/warehouse")
-local Chest = require("lib/chest")
-local Cell = require("lib/cell")
+local Warehouse = require("model/warehouse")
+local Chest = require("model/chest")
+local Cell = require("model/cell")
 
 test:case("successful construction", function(t)
     t:noerror(Warehouse.new, {
