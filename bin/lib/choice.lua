@@ -29,7 +29,11 @@ local function input(buffer)
 end
 
 
-local function choice(values)
+-- choice allows the user for choicing an item by interactive interface.
+-- args:
+--  values: any object
+--  f: values -> string function. this result represent each value in console interface.
+local function choice(values, f)
     local buffer = ""
     local pos = 1
 
@@ -47,7 +51,7 @@ local function choice(values)
 
         local filtered = {}
         for _, v in ipairs(values) do
-            if string.match(v, buffer) then
+            if string.match(f(v), buffer) then
                 table.insert(filtered, v)
             end
         end
@@ -78,16 +82,17 @@ local function choice(values)
 
         for i = cmin, cmax do
             term.setCursorPos(1, i-cmin+3)
+            local line = f(filtered[i])
             if i == pos then
                 if term.isColor() then
                     term.setTextColor(colors.red)
-                    print(filtered[i])
+                    print(line)
                 else
-                    term.write(">> " .. filtered[i])
+                    term.write(">> " .. line)
                 end
             else
                 term.setTextColor(colors.white)
-                term.write(filtered[i])
+                term.write(line)
             end
         end
         term.setTextColor(colors.white)

@@ -34,13 +34,19 @@ for _, dstName in ipairs(modem.getNamesRemote()) do
     end
 end
 
-local cells = warehouse:listCells()
-local cellNames = {}
-for _, cell in ipairs(cells) do
-    table.insert(cellNames, cell.name)
+local items = warehouse:listItems()
+
+local indexedItems = {}
+for _, item in pairs(items) do
+    -- cut empty cell
+    if item.name ~= "" then
+        table.insert(indexedItems, item)
+    end
 end
-local selected = choice(cellNames)
-print("You've selected: " .. selected)
+
+local selected = choice(indexedItems, function(item)
+    return item.name
+end)
 
 -- TODO: transfer  selected item to local storage.
 
