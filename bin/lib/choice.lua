@@ -12,14 +12,14 @@ local function choice(values)
             if keys.down == key then
                 return false, 1, buffer
             end
+
+            if keys.backspace == key then
+                return false, 0, buffer:sub(1, -2)
+            end
         elseif event == "key_up" then
             local key = datum[2]
             if keys.enter == key then
                 return (#buffer ~= 0), 0, buffer
-            end
-
-            if keys.backspace == key then
-                return false, 0, buffer:sub(1, -2)
             end
         elseif event == "char" then
             local ch = datum[2]
