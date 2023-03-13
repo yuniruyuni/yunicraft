@@ -35,7 +35,7 @@ local function choice(values)
     local width, height = term.getSize()
 
     -- buffer を提示するために2行消費する
-    local itemarea = height - 4
+    local itemarea = height - 2
 
     local cmin = 1
     local cmax = itemarea
@@ -51,7 +51,7 @@ local function choice(values)
             end
         end
 
-        local updated = last_items ~= #filtered
+        local updated = (last_items ~= #filtered)
         last_items = #filtered
 
         pos = pos + move
@@ -63,26 +63,37 @@ local function choice(values)
             cmax = math.min(itemarea, #filtered)
         elseif move < 0 then
             cmin = math.max(1, math.min(cmin, pos))
-            cmax = math.min(cmin + itemarea, #filtered)
+            cmax = math.min(cmin + itemarea - 1, #filtered)
         elseif 0 < move then
             cmax = math.min(math.max(cmax, pos), #filtered)
-            cmin = math.max(1, cmax - itemarea)
+            cmin = math.max(1, cmax - itemarea + 1)
         end
 
-        term.setCursorPos(1, 1)
         term.clear()
-        print(buffer)
-        print("-----------")
+        term.setCursorPos(1, 1)
+        term.write(buffer)
+        term.setCursorPos(1, 2)
+        term.write("-----------")
 
         for i = cmin, cmax do
+            term.setCursorPos(1, i-cmin+3)
             if i == pos then
-                print(">> " .. filtered[i])
+                if term.isColor() then
+                    term.setTextColor(colors.red)
+                    print(filtered[i])
+                else
+                    term.write(">> " .. filtered[i])
+                end
             else
-                print(filtered[i])
+                term.setTextColor(colors.white)
+                term.write(filtered[i])
             end
         end
+        term.setTextColor(colors.white)
 
         if entered then
+            term.clear()
+            term.setCursorPos(1, 1)
             return filtered[pos]
         end
     end
