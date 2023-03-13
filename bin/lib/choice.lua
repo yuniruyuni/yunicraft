@@ -18,7 +18,7 @@ local function input(buffer)
     elseif event == "key_up" then
         local key = datum[2]
         if keys.enter == key then
-            return (#buffer ~= 0), 0, buffer
+            return true, 0, buffer
         end
     elseif event == "char" then
         local ch = datum[2]
@@ -92,7 +92,8 @@ local function choice(values)
         end
         term.setTextColor(colors.white)
 
-        if entered then
+        -- pos == 0のときは候補が何もなくて選べない
+        if entered and pos ~= 0 then
             term.clear()
             term.setCursorPos(1, 1)
             return filtered[pos]
