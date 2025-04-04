@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CC_COMPUTER_PATH='/mnt/c/Users/yuniruyuni/curseforge/minecraft/Instances/YuniruCraft/saves/YuniruCraft/computercraft/computer'
+CC_COMPUTER_PATH='/mnt/c/Users/yuniruyuni/AppData/Roaming/ModrinthApp/profiles/YuniruCraft2/saves/YuniCraftV2/computercraft/computer'
 
 for FILE in `ls ${CC_COMPUTER_PATH}`
 do
