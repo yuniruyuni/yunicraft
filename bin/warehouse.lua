@@ -6,31 +6,19 @@ local choice = require("lib/choice")
 
 local modem = peripheral.find("modem")
 
--- findSrcBarrel finds a barrel in connected computer network.
--- This function will return a barrel's network name.
--- If there are no barrel in connected network, it will return empty string.
-local function filterBarrels()
-    local res = {}
-    local srcPrefix = "minecraft:barrel_"
-    for _, val in pairs(peripheral.getNames()) do
-        if string.match(val, srcPrefix) then
-            table.insert(res, val)
-        end
-    end
-    return res
+-- acquireBarrels finds a barrel in connected computer network.
+-- This function will return wrapped barrels
+-- If there are no barrel in connected network, it will return empty array.
+function acquireBarrels()
+    return {
+        peripheral.find("inventory", function (name)
+            return string.match(name, "minecraft:barrel_")
+        end)
+    }
 end
 
-local function wrapBarrels(names)
-    local res = {}
-    for _, name in pairs(names) do
-        table.insert(res, peripheral.wrap(name))
-    end
-    return res
-end
-
-local srcNames = filterBarrels()
-local srcs = wrapBarrels(srcNames)
-if #srcs == 0 then
+local barrels = acquireBarrels()
+if #barrels == 0 then
     print("There are no barrel. This program needs least one barrel for item inbox.")
     return 1
 end
@@ -68,24 +56,209 @@ for _, dstName in ipairs(modem.getNamesRemote()) do
     end
 end
 
+function transferBarrelItems()
+    for _, src in ipairs(barrels) do
+        for i, item in pairs(src.list()) do
+            if item ~= nil then
+                local cell = Cell.default(item)
+                -- print(textutils.serializeJSON(cell))
+                local chest = warehouse:findAvailableChestFor(cell)
+                -- print(textutils.serializeJSON(chest))
+                src.pushItems(chest.name, i, 64)
+                local pushed = warehouse:pushItem(cell)
+                -- print(textutils.serializeJSON(pushed))
+            else
+                print("item was nil")
+            end
+        end
+    end
+end
+
+function showMenuList()
+    local menus = {
+        {
+            name = "transfer",
+            run = function ()
+                local selected = showItemList()
+                transferItem(selected)
+            end
+        },
+        {
+            name = "furnace",
+            run = function()
+                local selected = showItemList()
+                runFurnace(selected)
+            end
+        },
+        {
+            name = "vacuum",
+            run = function()
+                vacuum()
+            end
+        },
+    }
+
+    return choice(menus, function(item)
+        return item.name
+    end)
+end
+
+function showItemList()
+    local items = warehouse:listItems()
+
+    local indexedItems = {}
+    for _, item in pairs(items) do
+        -- cut empty cell
+        if item.name ~= "" then
+            table.insert(indexedItems, item)
+        end
+    end
+
+    local selected = choice(indexedItems, function(item)
+        local sum = 0
+        for _, ref in ipairs(item.refs) do
+            sum = sum + ref.count
+        end
+        return item.name .. " / " .. sum
+    end)
+
+    return selected
+end
+
+function transferItem(selected)
+    print("attempt to obtain " .. selected.name .. " from " .. transferTarget)
+    local target = peripheral.wrap(transferTarget)
+    for _, ref in ipairs(selected.refs) do
+        target.pullItems(ref.chestName, ref.cellIndex)
+    end
+end
+
+function acquireFurnace()
+    return {
+        peripheral.find("inventory", function (name)
+            return string.match(name, "minecraft:furnace_")
+        end)
+    }
+end
+
+local furnaces = acquireFurnace()
+
+function runFurnace(selected)
+    local furnanceSrc = 1
+
+    local amount = table.getn(furnaces) * 64
+
+    local transfered = 0
+    while transfered < amount do
+        for _, ref in ipairs(selected.refs) do
+            for _, fur in pairs(furnaces) do
+                transfered = transfered + 64
+                fur.pullItems(ref.chestName, ref.cellIndex, 64, furnanceSrc)
+            end
+        end
+    end
+end
+
+function vacuum()
+    local furnaceSrc = 1
+    local barrel = barrels[1]
+    for _, fur in pairs(furnaces) do
+        local detail = fur.getItemDetail(furnaceSrc)
+        if detail then
+            local cell = findCell(barrel, detail.name)
+            fur.pushItems(
+                peripheral.getName(barrel),
+                furnaceSrc,
+                64,
+                cell
+            )
+        end
+    end
+end
+
+
+function findCell(chest, item)
+  firstEmpty = 0
+  items = chest.list()
+  for i = chest.size(),1,-1 do
+    detail = items[i]
+    if not detail then
+      firstEmpty = i
+      goto continue
+    end
+
+    if (
+        (detail.name == item) and
+        (detail.count < 64)
+    ) then
+      return i
+    end
+    ::continue::
+  end
+  return firstEmpty
+end
+
+function collectFurnaceProduct()
+    local furnaceProduct = 3
+    local barrel = barrels[1]
+    for _, fur in pairs(furnaces) do
+        local detail = fur.getItemDetail(furnaceProduct)
+        if detail then
+            local cell = findCell(barrel, detail.name)
+            barrel.pullItems(
+                peripheral.getName(fur),
+                furnaceProduct,
+                64,
+                cell
+            )
+        end
+    end
+end
+
+function refuelFurnace()
+    local fuelName = "minecraft:charcoal"
+    local items = warehouse:listItems()
+
+    local found = nil
+    for _, item in pairs(items) do
+        if item.name == fuelName then
+            found = item
+        end
+    end
+
+    if found then
+        local furnaceFuel = 2
+
+        for _, ref in ipairs(found.refs) do
+            for _, fur in pairs(furnaces) do
+                fur.pullItems(
+                    ref.chestName,
+                    ref.cellIndex,
+                    64,
+                    furnaceFuel
+                )
+            end
+        end
+    else
+        sleep(1)
+    end
+end
+
+function infiniteOf(f)
+    return function ()
+        while true do
+            f()
+        end
+    end
+end
+
 parallel.waitForAll(
-    -- thread for transfering from barrel to warehouse
+    -- thread for main menu
     function ()
         while true do
-            for _, src in ipairs(srcs) do
-                for i, item in pairs(src.list()) do
-                    if item ~= nil then
-                        local cell = Cell.default(item)
-                        -- print(textutils.serializeJSON(cell))
-                        local chest = warehouse:findAvailableChestFor(cell)
-                        -- print(textutils.serializeJSON(chest))
-                        src.pushItems(chest.name, i, 64)
-                        local pushed = warehouse:pushItem(cell)
-                        -- print(textutils.serializeJSON(pushed))
-                    else
-                        print("item was nil")
-                    end
-                end
+            local menu = showMenuList()
+            if menu then
+                menu.run()
             end
         end
     end,
@@ -95,32 +268,10 @@ parallel.waitForAll(
         transferTarget = side
         print("changed target: " .. transferTarget)
     end,
-    -- thread for detecting new
-    function ()
-        while true do
-            local items = warehouse:listItems()
-
-            local indexedItems = {}
-            for _, item in pairs(items) do
-                -- cut empty cell
-                if item.name ~= "" then
-                    table.insert(indexedItems, item)
-                end
-            end
-
-            local selected = choice(indexedItems, function(item)
-                local sum = 0
-                for _, ref in ipairs(item.refs) do
-                    sum = sum + ref.count
-                end
-                return item.name .. " / " .. sum
-            end)
-
-            print("attempt to obtain " .. selected.name .. " from " .. transferTarget)
-            local target = peripheral.wrap(transferTarget)
-            for _, ref in ipairs(selected.refs) do
-                target.pullItems(ref.chestName, ref.cellIndex)
-            end
-        end
-    end
+    -- thread for transfering from barrel to warehouse
+    infiniteOf(transferBarrelItems),
+    -- auto product collection from furnace
+    infiniteOf(collectFurnaceProduct),
+    -- auto refuel for furnace
+    infiniteOf(refuelFurnace)
 )
