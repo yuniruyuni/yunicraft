@@ -30,31 +30,37 @@ local CHEST_MAX_ITEM_COUNT = 54
 local warehouse = Warehouse.default{}
 local transferTarget = ""
 
-local dstPrefix = "minecraft:chest_"
-for _, dstName in ipairs(modem.getNamesRemote()) do
-    if string.match(dstName, dstPrefix) then
-        local dst = peripheral.wrap(dstName)
-        if dst.size() == CHEST_MAX_ITEM_COUNT then
-            local items = dst.list()
+function consructWarehouse()
+    local warehouse = Warehouse.default{}
+    local dstPrefix = "minecraft:chest_"
+    for _, dstName in ipairs(modem.getNamesRemote()) do
+        if string.match(dstName, dstPrefix) then
+            local dst = peripheral.wrap(dstName)
+            if dst.size() == CHEST_MAX_ITEM_COUNT then
+                local items = dst.list()
 
-            -- 中身がないならemptyChestsとして登録
-            local chest = Chest.default{name = dstName}
-            for i = 1, CHEST_MAX_ITEM_COUNT do
-                local item = {}
-                if items[i] ~= nil then
-                    item = items[i]
+                -- 中身がないならemptyChestsとして登録
+                local chest = Chest.default{name = dstName}
+                for i = 1, CHEST_MAX_ITEM_COUNT do
+                    local item = {}
+                    if items[i] ~= nil then
+                        item = items[i]
+                    end
+
+                    local cell = Cell.default(item)
+                    table.insert(chest.cells, cell)
                 end
 
-                local cell = Cell.default(item)
-                table.insert(chest.cells, cell)
+                table.insert(warehouse.chests, chest)
+            else
+                transferTarget = dstName
             end
-
-            table.insert(warehouse.chests, chest)
-        else
-            transferTarget = dstName
         end
     end
+    return warehouse
 end
+
+warehouse = consructWarehouse()
 
 function transferBarrelItems()
     for _, src in ipairs(barrels) do
@@ -87,7 +93,8 @@ function showMenuList()
             name = "furnace",
             run = function()
                 local selected = showItemList()
-                runFurnace(selected)
+                local amount = 256
+                runFurnace(selected, amount)
             end
         },
         {
@@ -131,6 +138,7 @@ function transferItem(selected)
     for _, ref in ipairs(selected.refs) do
         target.pullItems(ref.chestName, ref.cellIndex)
     end
+    warehouse = consructWarehouse()
 end
 
 function acquireFurnace()
@@ -143,20 +151,35 @@ end
 
 local furnaces = acquireFurnace()
 
-function runFurnace(selected)
+function runFurnace(selected, amount)
     local furnanceSrc = 1
 
-    local amount = table.getn(furnaces) * 64
+    local len = table.getn(furnaces)
 
     local transfered = 0
-    while transfered < amount do
-        for _, ref in ipairs(selected.refs) do
-            for _, fur in pairs(furnaces) do
-                transfered = transfered + 64
-                fur.pullItems(ref.chestName, ref.cellIndex, 64, furnanceSrc)
-            end
+    for _, ref in ipairs(selected.refs) do
+        if amount <= transfered then
+            break
+        end
+
+        -- minimum assignment for each furnace.
+        -- if it is not defined, almost always furnance burns single item by single fuel.
+        -- this is too inefficient so avoid by this value.
+        local MinAssign = 8
+        local desired = math.max(math.floor(ref.count / len), MinAssign)
+
+        for _, fur in pairs(furnaces) do
+            local count = fur.pullItems(
+                ref.chestName,
+                ref.cellIndex,
+                desired,
+                furnanceSrc
+            )
+            transfered = transfered + count
         end
     end
+
+    warehouse = consructWarehouse()
 end
 
 function vacuum()
@@ -230,15 +253,24 @@ function refuelFurnace()
         local furnaceFuel = 2
 
         for _, ref in ipairs(found.refs) do
-            for _, fur in pairs(furnaces) do
-                fur.pullItems(
-                    ref.chestName,
-                    ref.cellIndex,
-                    64,
-                    furnaceFuel
-                )
+            while 0 <= ref.count do
+                local len = table.getn(furnaces)
+                local desired = math.max(math.floor(ref.count / len), 1)
+                for _, fur in pairs(furnaces) do
+                    local count = fur.pullItems(
+                        ref.chestName,
+                        ref.cellIndex,
+                        desired,
+                        furnaceFuel
+                    )
+                    if count then
+                        ref.count = ref.count - count
+                    end
+                end
             end
         end
+
+        warehouse = consructWarehouse()
     else
         sleep(1)
     end
